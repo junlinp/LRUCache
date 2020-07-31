@@ -32,7 +32,7 @@ jobs:
         git clone https://github.com/USCiLab/cereal.git
         cd cereal
         cmake .
-        make install
+        sudo make install
 
     - name: Initialize environment googletest
       run: |
@@ -40,7 +40,7 @@ jobs:
         git clone https://github.com/google/googletest.git 
         cd googletest
         cmake .
-        make install
+        sudo make install
    
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
