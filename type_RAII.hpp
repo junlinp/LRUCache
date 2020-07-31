@@ -41,8 +41,12 @@ class TypeRAII : public StoreValue {
       : cache_path_(cache_path), StoreValue(init_value){};
   TypeRAII(const std::string& cache_path, T&& init_value)
       : cache_path_(cache_path), StoreValue(std::move(init_value)){};
+  TypeRAII(const T&) = delete;
   virtual ~TypeRAII() { Save(); }
-
+  TypeRAII& operator=(const T& rhs) {
+    (*static_cast<StoreValue*>(this)) = rhs;
+    return *this;
+  }
   bool Load() {
     std::ifstream ifs(cache_path_, std::ios::binary);
     if (!ifs.is_open()) {
@@ -65,6 +69,8 @@ class TypeRAII : public StoreValue {
     }
     return true;
   };
+
+  const std::string SavePath() const { return cache_path_; }
 
  private:
   std::string cache_path_;
