@@ -16,8 +16,7 @@
 #include "cereal/cereal.hpp"
 namespace LRUCache {
 
-template <class T,
-          class = typename std::enable_if<std::is_scalar<T>::value>::type>
+template <class T>
 struct BasicTypeWrap {
   BasicTypeWrap() : value_() {}
   BasicTypeWrap(const T& value) : value_(value) {}
@@ -32,8 +31,8 @@ struct BasicTypeWrap {
 /**
  * It will save to path when no one use the variable
  */
-template <class T, class StoreValue = std::conditional<std::is_scalar<T>::value,
-                                                       BasicTypeWrap<T>, T>>
+template <class T, class StoreValue = typename std::conditional<
+                       std::is_scalar<T>::value, BasicTypeWrap<T>, T>::type>
 class TypeRAII : public StoreValue {
  public:
   TypeRAII(const std::string& cache_path)
