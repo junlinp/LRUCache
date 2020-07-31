@@ -32,7 +32,15 @@ jobs:
         cd cereal
         cmake .
         make install
-        
+
+     - name: Initialize environment googletest
+      run: |
+        apt-get install -y git
+        git clone https://github.com/google/googletest.git 
+        cd googletest
+        cmake .
+        make install
+   
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
       run: |
