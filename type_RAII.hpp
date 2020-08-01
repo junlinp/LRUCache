@@ -19,8 +19,43 @@ namespace LRUCache {
 template <class T>
 struct BasicTypeWrap {
   BasicTypeWrap() : value_() {}
+  BasicTypeWrap(const BasicTypeWrap& value) : value_(value.value_) {}
+  BasicTypeWrap(BasicTypeWrap&& value) : value_(std::move(value.value_)) {}
   BasicTypeWrap(const T& value) : value_(value) {}
   BasicTypeWrap(T&& value) : value_(std::move(value)) {}
+  BasicTypeWrap& operator=(const T& value) {
+    this->value_ = value;
+    return *this;
+  }
+  BasicTypeWrap& operator=(const BasicTypeWrap& value) {
+    this->value_ = value.value_;
+    return *this;
+  }
+
+  BasicTypeWrap operator+(const BasicTypeWrap& rhs) const {
+    BasicTypeWrap res(value_ + rhs.value_);
+    return res;
+  }
+
+  BasicTypeWrap operator-(const BasicTypeWrap& rhs) const {
+    BasicTypeWrap res(value_ - rhs.value_);
+    return res;
+  }
+
+  BasicTypeWrap& operator+=(const BasicTypeWrap& rhs) {
+    value_ += rhs.value_;
+    return *this;
+  }
+
+  bool operator==(const BasicTypeWrap& rhs) const {
+    return value_ == rhs.value_;
+  }
+  bool operator==(const T& rhs) const { return value_ == rhs; }
+
+  bool operator!=(const BasicTypeWrap& rhs) const {
+    return value_ != rhs.value_;
+  }
+  bool operator!=(const T& rhs) const { return value_ != rhs; }
 
   template <class Archive>
   void serialize(Archive& ar) {
@@ -28,6 +63,19 @@ struct BasicTypeWrap {
   }
   T value_;
 };
+template <class T, class U>
+bool operator==(const T& lhs, const BasicTypeWrap<U>& rhs) {
+  return lhs == rhs.value_;
+}
+template <class T, class U>
+bool operator!=(const T& lhs, const BasicTypeWrap<U>& rhs) {
+  return lhs != rhs.value_;
+}
+template <class T, class U>
+BasicTypeWrap<U> operator+(const T& lhs, const BasicTypeWrap<U>& rhs) {
+  return BasicTypeWrap<U>(lhs + rhs.value_);
+}
+
 /**
  * It will save to path when no one use the variable
  */
@@ -43,10 +91,13 @@ class TypeRAII : public StoreValue {
       : cache_path_(cache_path), StoreValue(std::move(init_value)){};
   TypeRAII(const T&) = delete;
   virtual ~TypeRAII() { Save(); }
+
+  template <class Q = T, class Enable = void>
   TypeRAII& operator=(const T& rhs) {
     (*static_cast<StoreValue*>(this)) = rhs;
     return *this;
   }
+
   bool Load() {
     std::ifstream ifs(cache_path_, std::ios::binary);
     if (!ifs.is_open()) {
