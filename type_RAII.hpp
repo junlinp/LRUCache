@@ -37,13 +37,77 @@ struct BasicTypeWrap {
     return res;
   }
 
+  BasicTypeWrap operator+(const T& rhs) const {
+    BasicTypeWrap res(value_ + rhs);
+    return res;
+  }
+
   BasicTypeWrap operator-(const BasicTypeWrap& rhs) const {
     BasicTypeWrap res(value_ - rhs.value_);
     return res;
   }
 
+  BasicTypeWrap operator-(const T& rhs) const {
+    BasicTypeWrap res(value_ - rhs);
+    return res;
+  }
+
+  BasicTypeWrap operator*(const BasicTypeWrap& rhs) const {
+    BasicTypeWrap res(value_ * rhs.value_);
+    return res;
+  }
+
+  BasicTypeWrap operator*(const T& rhs) const {
+    BasicTypeWrap res(value_ * rhs);
+    return res;
+  }
+
+  BasicTypeWrap operator/(const BasicTypeWrap& rhs) const {
+    BasicTypeWrap res(value_ / rhs.value_);
+    return res;
+  }
+
+  BasicTypeWrap operator/(const T& rhs) const {
+    BasicTypeWrap res(value_ * rhs);
+    return res;
+  }
+
   BasicTypeWrap& operator+=(const BasicTypeWrap& rhs) {
     value_ += rhs.value_;
+    return *this;
+  }
+
+  BasicTypeWrap& operator+=(const T& rhs) {
+    value_ += rhs;
+    return *this;
+  }
+
+  BasicTypeWrap& operator-=(const BasicTypeWrap& rhs) {
+    value_ -= rhs.value_;
+    return *this;
+  }
+
+  BasicTypeWrap& operator-=(const T& rhs) {
+    value_ -= rhs;
+    return *this;
+  }
+
+  BasicTypeWrap& operator*=(const BasicTypeWrap& rhs) {
+    value_ *= rhs.value_;
+    return *this;
+  }
+  BasicTypeWrap& operator*=(const T& rhs) {
+    value_ *= rhs;
+    return *this;
+  }
+
+  BasicTypeWrap& operator/=(const BasicTypeWrap& rhs) {
+    value_ /= rhs.value_;
+    return *this;
+  }
+
+  BasicTypeWrap& operator/=(const T& rhs) {
+    value_ /= rhs;
     return *this;
   }
 
