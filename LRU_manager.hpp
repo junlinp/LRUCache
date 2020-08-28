@@ -8,7 +8,11 @@
 
 #ifndef LRU_CACHE_LRU_MANAGER_HPP
 #define LRU_CACHE_LRU_MANAGER_HPP
+#include <deque>
+#include <map>
+
 #include "type_RAII.hpp"
+
 namespace LRUCache {
 
 template <class Key, class Value>
@@ -19,7 +23,8 @@ class LRUManager {
 
  public:
   LRUManager(const std::string cache_directory,
-             const int max_cache_capacity = 32);
+             const int max_cache_capacity = 65536)
+      : cache_directory_(cache_directory){};
 
   Value_Ptr get(const Key& key) {
     // key not exist
@@ -44,11 +49,12 @@ class LRUManager {
 
  private:
   WrapValue_Ptr GenerateInitValuePtr(const Key& key);
-  WrapValue_Ptr LoadKeyFromFile(key);
+  WrapValue_Ptr LoadKeyFromFile(const Key& key);
   void InsertToLink(WrapValue_Ptr& value);
 
   std::map<Key, std::weak_ptr<WrapValue_Ptr>> map_;
   std::deque<WrapValue_Ptr> link_;
+  std::string cache_directory_;
 };
 }  // namespace LRUCache
 #endif

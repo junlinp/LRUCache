@@ -3,8 +3,9 @@
 #include <cereal/types/vector.hpp>
 #include <memory>
 #include <vector>
-
+#include "LRU_map.hpp"
 #include "gtest/gtest.h"
+
 
 TEST(type_RAII, aithmetic) {
   std::shared_ptr<LRUCache::BasicTypeWrap<int>> raii =
@@ -65,6 +66,17 @@ TEST(type_RAII, STL) {
   *raii = std::vector<int>();
 }
 
+TEST(type_RAII, range) {
+  LRUCache::LRUMap<int, std::vector<size_t>> map_;
+  /*
+  map_ | range::view::transform([](auto& element) {
+      std::vector<size_t>& second = element.second;
+      std::vector<size_t> temp(second.size());
+      std::transform(begin(second), end(second), begin(temp), [](size_t i){return 2 * i;});
+    return std::pair<int, std::vector<size_t>>(element.first, temp);
+  });
+  */
+}
 int main(int argc, char** argv) {
   testing::InitGoogleTest();
   return RUN_ALL_TESTS();
